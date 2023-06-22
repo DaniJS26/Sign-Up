@@ -1,7 +1,8 @@
 const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
-app.use(bodyParser.urlencoded({extended: true}))
+const https = require("https");
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(__dirname + "/public"))
 app.use(express.static(__dirname + "/node_modules/bootstrap/dist"))
 
@@ -14,11 +15,48 @@ app.post("/", (req, res) => {
     let fName = req.body.fName;
     let lName = req.body.lName;
     let email = req.body.email;
-    res.write(fName)
-    res.write(lName)
-    res.write(email)
-    res.send()
+    // let listID = "11366967ea";
+    // let apiKey = "f3dadeaab16d5483607b86f3fe3e822f-us21";
+    let url = "https://us21.api.mailchimp.com/3.0/lists/11366967ea"
+    let data = {
+        members: [
+            {
+                email_address: email,
+
+                status: "subscribed",
+
+                merge_fields: {
+                    FNAME: fName,
+                    LNAME: lName,
+                }
+
+            }
+        ]
+    }
+
+    let jsonData = JSON.stringify(data);
+
+
+    let options = {
+        auth: "john:f3dadeaab16d5483607b86f3fe3e822f-us21",
+        method: "POST",
+    }
+
+    const request = https.request(url, options, (res) => {
+        res.on("data", (data) => {
+            console.log("Your email is successfully registered..")
+        })
+        res.on('error', e => {
+            console.error(e)
+        })
+    })
+
+    request.write(jsonData);
+    request.end();
+    
 })
+
+
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000...")
