@@ -4,6 +4,7 @@ const bodyParser = require("body-parser")
 const https = require("https");
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(__dirname + "/public"))
+app.use(express.static(__dirname + "/result"))
 app.use(express.static(__dirname + "/node_modules/bootstrap/dist"))
 
 
@@ -42,12 +43,21 @@ app.post("/", (req, res) => {
         method: "POST",
     }
 
-    const request = https.request(url, options, (res) => {
-        res.on("data", (data) => {
-            console.log("Your email is successfully registered..")
-        })
-        res.on('error', e => {
-            console.error(e)
+    const request = https.request(url, options, (response) => {
+        console.log(response.statusCode)
+        
+        if(response.statusCode === 200) {
+            res.sendFile(__dirname + "/result/200/200.html")
+        }
+        else if (response.statusCode === 401) {
+            res.sendFile(__dirname + "/result/401/401.html")
+        }
+        else{
+            res.sendFile(__dirname + "/result/404/404.html")
+        }
+
+        response.on("data", (data) => {
+            console.log(JSON.parse(data))
         })
     })
 
