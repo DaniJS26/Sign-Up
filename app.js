@@ -17,7 +17,7 @@ app.post("/", (req, res) => {
     let lName = req.body.lName;
     let email = req.body.email;
     // let listID = "11366967ea";
-    // let apiKey = "f3dadeaab16d5483607b86f3fe3e822f-us21";
+    // let apiKey = "982a94a2499e7fd010f3524b8ce2d28e-us21";
     let url = "https://us21.api.mailchimp.com/3.0/lists/11366967ea"
     let data = {
         members: [
@@ -39,7 +39,7 @@ app.post("/", (req, res) => {
 
 
     let options = {
-        auth: "john:f3dadeaab16d5483607b86f3fe3e822f-us21",
+        auth: "john:982a94a2499e7fd010f3524b8ce2d28e-us21",
         method: "POST",
     }
 
